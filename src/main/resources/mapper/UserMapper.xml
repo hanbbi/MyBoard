@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.mybatis.myboard.mapper.UserMapper">
+    <resultMap id="userMap" type="UserDto" autoMapping="true">
+        <id column="user_id" property="userId"/>
+        <result column="user_name" property="userName"/>
+        <result column="user_pw" property="userPw"/>
+        <result column="user_phone" property="userPhone"/>
+        <result column="user_email" property="userEmail"/>
+        <result column="user_birth" property="userBirth"/>
+        <result column="reg_date" property="regDate"/>
+    </resultMap>
+
+    <insert id="insertOne" parameterType="UserDto">
+        INSERT INTO user (user_id, user_name, user_pw, user_phone, user_email, user_birth)
+        VALUES (#{userId}, #{userName}, #{userPw}, #{userPhone}, #{userEmail}, #{userBirth})
+    </insert>
+
+    <update id="updateOne" parameterType="UserDto">
+        UPDATE user SET user_pw=#{userPw}, user_phone=#{userPhone}, user_email=#{userEmail}
+                    WHERE user_id=#{userId}
+    </update>
+
+    <delete id="deleteById" parameterType="String">
+        DELETE FROM user WHERE user_id=#{userId}
+    </delete>
+
+    <select id="countPaging" resultType="int" parameterType="PagingDto">
+        SELECT count(*) FROM user
+    </select>
+
+    <select id="selectById" resultMap="userMap" parameterType="String">
+        SELECT * FROM user WHERE user_id=#{userId}
+    </select>
+
+    <select id="selectByUserIdAndUserPw" resultMap="userMap">
+        SELECT * FROM user WHERE user_id=#{userId} AND user_pw=#{userPw}
+    </select>
+
+    <select id="listPaging" resultMap="userMap" parameterType="PagingDto">
+        SELECT * FROM user
+        <if test="orderField != null">
+            ORDER BY ${orderField} #{direct}
+        </if>
+        LIMIT #{startRow}, #{rows}
+    </select>
+
+    <select id="listAll" resultMap="userMap">
+        SELECT * FROM user
+    </select>
+</mapper>

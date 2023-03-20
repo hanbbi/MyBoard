@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+    <form action="/reply/register.do" method="post" enctype="multipart/form-data" class="uk-card uk-card-default uk-width-1-1" name="replyRegisterForm">
+        <input type="hidden" name="boardId" th:value="${boardId}">
+        <input type="hidden" name="fkReplyId">
+
+        <div class="uk-card-header">
+            <div class="uk-grid-small uk-flex-middle" uk-grid>
+                <div class="uk-width-expand">
+                    <h3 class="uk-card-title">Reply Register</h3>
+                    <p class="uk-text-secondary uk-margin-small-bottom uk-margin-top-remove">
+                        <input class="uk-input uk-form-small" name="userId" readonly th:value="${session.loginUser.userId}">
+                    </p>
+                    <p class="uk-text-meta uk-margin-remove">
+                        <input class="uk-input uk-form-small" name="title" placeholder="title">
+                    </p>
+                    <p class="uk-margin-small-top uk-margin-top-remove" uk-form-custom="target: true">
+                        <input type="file" name="imgFile">
+                        <input class="uk-input uk-form-small" type="text" placeholder="Image File" disabled>
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="uk-card-body">
+            <p>
+                <textarea name="contents" class="uk-textarea uk-width-1-1" rows="2" placeholder="text"></textarea>
+            </p>
+        </div>
+        <div class="uk-card-footer">
+            <ul class="uk-breadcrumb">
+                <li><button type="reset" class="uk-button uk-button-text uk-text-warning">Reset</button></li>
+                <li><button type="submit" class="uk-button uk-button-text uk-text-primary">Submit</button></li>
+            </ul>
+        </div>
+    </form>
+</html>

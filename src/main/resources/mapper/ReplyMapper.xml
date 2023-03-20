@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mybatis.myboard.mapper.ReplyMapper">
+    <resultMap id="replyMap" type="ReplyDto" autoMapping="true">
+        <id column="reply_id" property="replyId"/>
+        <result column="board_id" property="boardId"/>
+        <result column="user_id" property="userId"/>
+        <result column="fk_reply_id" property="fkReplyId"/>
+        <result column="reg_date" property="regDate"/>
+        <result column="img_path" property="imgPath"/>
+
+        <association property="user"
+                     column="user_id"
+                     select="com.mybatis.myboard.mapper.UserMapper.selectById"
+                     fetchType="lazy"/>
+        <association property="replyPreferView"
+                     resultMap="ReplyPreferViewMap"
+                     fetchType="lazy"/>
+        <collection property="replyList"
+                    autoMapping="true"
+                    javaType="java.util.ArrayList"
+                    ofType="ReplyDto"
+                    select="com.mybatis.myboard.mapper.ReplyMapper.listByFkReplyId"
+                    column="reply_id"
+                    fetchType="lazy"/>
+    </resultMap>
+
+    <resultMap id="ReplyPreferViewMap" type="ReplyPreferViewDto">
+        <association property="likes"
+                     select="com.mybatis.myboard.mapper.ReplyPreferMapper.countByReplyIdAndPreferIsTrue"
+                     column="reply_id"/>
+        <association property="bads"
+                     select="com.mybatis.myboard.mapper.ReplyPreferMapper.countByReplyIdAndPreferIsFalse"
+                     column="reply_id"/>
+    </resultMap>
+
+    <insert id="insertOne" parameterType="ReplyDto" useGeneratedKeys="true" keyProperty="replyId">
+        INSERT INTO reply (board_id, user_id, fk_reply_id, title, contents, img_path)
+        VALUES (#{boardId}, #{userId}, #{fkReplyId},#{title}, #{contents}, #{imgPath})
+    </insert>
+
+    <update id="updateOne">
+        UPDATE reply SET title=#{title}, contents=#{contents}, img_path=#{imgPath}
+                     WHERE reply_id=#{replyId}
+    </update>
+
+    <delete id="deleteById">
+        DELETE FROM reply WHERE reply_id=#{replyId}
+    </delete>
+
+    <select id="countByBoardId" resultType="java.lang.Integer">
+        SELECT count(*) FROM reply WHERE board_id=#{boardId}
+    </select>
+
+    <select id="countByUserId" resultType="java.lang.Integer">
+        SELECT count(*) FROM reply WHERE user_id=#{userId}
+    </select>
+
+    <select id="selectById" resultMap="replyMap">
+        SELECT * FROM reply WHERE reply_id=#{replyId}
+    </select>
+
+    <select id="countPreferByReplyId" resultMap="ReplyPreferViewMap">
+        SELECT * FROM reply WHERE reply_id=#{replyId}
+    </select>
+
+    <select id="listByBoardId" resultMap="replyMap">
+        SELECT * FROM reply WHERE board_id=#{boardId}
+    </select>
+
+    <select id="listByFkReplyId" resultMap="replyMap">
+        SELECT * FROM reply WHERE fk_reply_id=#{replyId}
+    </select>
+
+    <select id="listByBoardIdPaging" resultMap="replyMap">
+        SELECT * FROM reply WHERE board_id=#{boardId}
+        AND fk_reply_id IS NULL
+        ORDER BY
+        <choose>
+            <when test="paging.orderField==null">board_id</when>
+            <otherwise>${paging.orderField}</otherwise>
+        </choose>
+        ${paging.direct}
+        LIMIT #{paging.startRow}, #{paging.rows}
+    </select>
+
+    <select id="listByUserIdPaging" resultMap="replyMap">
+        SELECT * FROM reply WHERE user_id=#{userId}
+        ORDER BY
+        <choose>
+            <when test="paging.orderField==null">user_id</when>
+            <otherwise>${paging.orderField}</otherwise>
+        </choose>
+        ${paging.direct}
+        LIMIT #{paging.startRow}, #{paging.rows}
+    </select>
+
+    <select id="listAll" resultMap="replyMap">
+        SELECT * FROM reply
+    </select>
+</mapper>

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{/layout}">
+<head>
+    <meta charset="UTF-8">
+    <title>User Sign Up Form</title>
+</head>
+<div layout:fragment="contents">
+    <h1>User Sign Up Page</h1>
+    <div class="uk-grid">
+        <form class="uk-padding uk-width-1-3@l uk-width-1-2@m uk-width-1-1@s" action="signup.do" method="post">
+            <br>
+            <div class="uk-margin">
+                <div class="uk-inline uk-width-1-1">
+                    <span class="uk-form-icon uk-form-icon-flip" uk-icon="icon: user"></span>
+                    <input class="uk-input uk-form-blank" type="text" id="userId" name="userId" placeholder="ID(ex.abc123)">
+                </div>
+            </div>
+            <div class="uk-margin">
+                <div class="uk-inline uk-width-1-1">
+                    <span class="uk-form-icon uk-form-icon-flip" uk-icon="icon: lock"></span>
+                    <input class="uk-input uk-form-blank" type="password" id="userPw" name="userPw" placeholder="PW(ex.1234)">
+                </div>
+            </div>
+            <div class="uk-margin">
+                <div class="uk-inline uk-width-1-1">
+                    <span class="uk-form-icon uk-form-icon-flip" uk-icon="icon: happy"></span>
+                    <input class="uk-input uk-form-blank" type="text" id="userName" name="userName" placeholder="NAME(ex.홍길동)">
+                </div>
+            </div>
+            <div class="uk-margin">
+                <div class="uk-inline uk-width-1-1">
+                    <span class="uk-form-icon uk-form-icon-flip" uk-icon="icon: phone"></span>
+                    <input class="uk-input uk-form-blank" type="text" id="userPhone" name="userPhone" placeholder="PHONE(ex.010-1234-5678)">
+                </div>
+            </div>
+            <div class="uk-margin">
+                <div class="uk-inline uk-width-1-1">
+                    <span class="uk-form-icon uk-form-icon-flip" uk-icon="icon: mail"></span>
+                    <input class="uk-input uk-form-blank" type="text" id="userEmail" name="userEmail" placeholder="EMAIL(ex.abc123@naver.com)">
+                </div>
+            </div>
+            <div class="uk-margin">
+                <div class="uk-inline uk-width-1-1">
+                    <span class="uk-form-icon uk-form-icon-flip"></span>
+                    <input class="uk-input uk-form-blank" type="date" id="userBirth" name="userBirth">
+                </div>
+            </div>
+            <div class="uk-margin-top">
+                <div class="uk-width uk-button-group">
+                    <button class="uk-width-1-2 uk-button uk-button-small uk-button-default" type="reset">RESET</button>
+                    <button class="uk-width-1-2 uk-button uk-button-small uk-button-primary" type="submit">SUBMIT</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+</html>

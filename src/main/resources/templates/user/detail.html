@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{/layout}">
+<head>
+    <meta charset="UTF-8">
+    <title>User Detail</title>
+</head>
+<div layout:fragment="contents">
+    <h1><span th:text="${param.user_id}"></span> : User Detail Page</h1>
+    <p class="uk-text-right">
+        <a class="uk-button uk-button-small uk-button-primary" th:href="@{'modify.do'(userId=${user.userId})}">Modify</a>
+    </p>
+    <div class="uk-margin">
+        <label class="uk-form-label" for="userId">ID : </label>
+        <div class="uk-inline">
+            <span class="uk-form-icon uk-form-icon-flip" uk-icon="icon: user"></span>
+            <input class="uk-input uk-form-blank" type="text" readonly th:value="${user.userId}" id="userId" name="user_id">
+        </div>
+    </div>
+    <div class="uk-margin">
+        <label class="uk-form-label" for="userName">NAME : </label>
+        <div class="uk-inline">
+            <span class="uk-form-icon uk-form-icon-flip" uk-icon="icon: happy"></span>
+            <input class="uk-input uk-form-blank" type="text" readonly th:value="${user.userName}" id="userName" name="user_name">
+        </div>
+    </div>
+    <div class="uk-margin">
+        <label class="uk-form-label" for="userPhone">PHONE : </label>
+        <div class="uk-inline">
+            <span class="uk-form-icon uk-form-icon-flip" uk-icon="icon: phone"></span>
+            <input class="uk-input uk-form-blank" type="text" readonly th:value="${user.userPhone}" id="userPhone" name="user_phone">
+        </div>
+    </div>
+    <div class="uk-margin">
+        <label class="uk-form-label" for="userEmail">EMAIL : </label>
+        <div class="uk-inline">
+            <span class="uk-form-icon uk-form-icon-flip" uk-icon="icon: mail"></span>
+            <input class="uk-input uk-form-blank" type="text" readonly th:value="${user.userEmail}" id="userEmail" name="user_email">
+        </div>
+    </div>
+    <div class="uk-margin">
+        <label class="uk-form-label" for="userBirth">BIRTH : </label>
+        <div class="uk-inline">
+            <span class="uk-form-icon uk-form-icon-flip" uk-icon="icon: calendar"></span>
+            <input class="uk-input uk-form-blank" type="text" readonly th:value="${#calendars.format(user.userBirth, 'yyyy-MM-dd')}" id="userBirth" name="user_birth">
+        </div>
+    </div>
+    <div class="uk-margin">
+        <label class="uk-form-label" for="regDate">SIGN UP : </label>
+        <div class="uk-inline">
+            <span class="uk-form-icon uk-form-icon-flip" uk-icon="icon: clock"></span>
+            <input class="uk-input uk-form-blank" type="text" readonly th:value="${#calendars.format(user.regDate, 'yyyy-MM-dd HH:mm:ss')}" id="regDate" name="reg_date">
+        </div>
+    </div>
+</div>
+</html>

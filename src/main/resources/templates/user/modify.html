@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{/layout}">
+<head>
+    <meta charset="UTF-8">
+    <title>User Modify Form</title>
+</head>
+<div layout:fragment="contents">
+    <h1><span th:text="${param.user_id}"></span> : User Modify Page</h1>
+    <div class="uk-grid">
+        <form class="uk-padding uk-width-1-3@l uk-width-1-2@m uk-width-1-1@s" action="modify.do" method="post">
+            <br>
+            <div class="uk-margin">
+                <div class="uk-inline uk-width-1-1">
+                    <span class="uk-form-icon uk-form-icon-flip" uk-icon="icon: user"></span>
+                    <input class="uk-input uk-form-blank" type="text" readonly th:value="${user.userId}" id="userId" name="user_id">
+                </div>
+            </div>
+            <div class="uk-margin">
+                <div class="uk-inline uk-width-1-1">
+                    <span class="uk-form-icon uk-form-icon-flip" uk-icon="icon: lock"></span>
+                    <input class="uk-input uk-form-blank" type="password" th:value="${user.userPw}" id="userPw" name="user_pw">
+                </div>
+            </div>
+            <div class="uk-margin">
+                <div class="uk-inline uk-width-1-1">
+                    <span class="uk-form-icon uk-form-icon-flip" uk-icon="icon: happy"></span>
+                    <input class="uk-input uk-form-blank" type="text" readonly th:value="${user.name}" id="userName" name="user_name">
+                </div>
+            </div>
+            <div class="uk-margin">
+                <div class="uk-inline uk-width-1-1">
+                    <span class="uk-form-icon uk-form-icon-flip" uk-icon="icon: phone"></span>
+                    <input class="uk-input uk-form-blank" type="text" th:value="${user.userPhone}" id="userPhone" name="user_phone">
+                </div>
+            </div>
+            <div class="uk-margin">
+                <div class="uk-inline uk-width-1-1">
+                    <span class="uk-form-icon uk-form-icon-flip" uk-icon="icon: mail"></span>
+                    <input class="uk-input uk-form-blank" type="text" th:value="${user.userEmail}" id="userEmail" name="user_email">
+                </div>
+            </div>
+            <div class="uk-margin">
+                <div class="uk-inline uk-width-1-1">
+                    <span class="uk-form-icon uk-form-icon-flip"></span>
+                    <input class="uk-input uk-form-blank" type="date" readonly th:value="${#calendars.format(user.userBirth, 'yyyy-MM-dd')}" id="userBirth" name="user_birth">
+                </div>
+            </div>
+            <div class="uk-margin">
+                <div class="uk-inline uk-width-1-1">
+                    <span class="uk-form-icon uk-form-icon-flip"></span>
+                    <input class="uk-input uk-form-blank" type="datetime-local" readonly th:value="${#calendars.format(user.regDate, 'yyyy-MM-dd HH:mm:ss')}" id="regDate" name="reg_date">
+                </div>
+            </div>
+            <div class="uk-margin-top">
+                <div class="uk-width uk-button-group">
+                    <button class="uk-width-1-3 uk-button uk-button-small uk-button-default" type="reset">RESET</button>
+                    <button class="uk-width-1-3 uk-button uk-button-small uk-button-primary" type="submit">SUBMIT</button>
+                    <a class="uk-width-1-3 uk-button uk-button-small uk-button-danger" th:href="@{'delete.do'(userId=${user.userId})}">Delete</a>
+                </div>
+
+            </div>
+        </form>
+    </div>
+
+</div>
+</html>

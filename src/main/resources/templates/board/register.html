@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{/layout}">
+<head>
+    <meta charset="UTF-8">
+    <title>Board Register Form</title>
+</head>
+<div layout:fragment="contents">
+    <h1>Board Register Page</h1>
+    <div class="uk-grid">
+        <form action="/board/register.do"
+              method="post"
+              enctype="multipart/form-data"
+              class="uk-card uk-card-default uk-width-1-1"
+              name="boardRegisterForm">
+            <div class="uk-card-header">
+                <div class="uk-grid uk-grid-small uk-flex-middle">
+                    <div class="uk-width-expand">
+                        <p class="">
+                            <input class="uk-input uk-form-small" name="userId" readonly th:value="${session.loginUser.userId}">
+                        </p>
+                        <p class="uk-text-meta uk-margin-remove">
+                            <input class="uk-input uk-form-small" name="title" placeholder="title">
+                        </p>
+                        <div uk-grid class="">
+                            <div uk-form-custom="target: true">
+                                <input type="file" name="imgFile">
+                                <input class="uk-input uk-form-small" type="text" placeholder="이미지 파일 1">
+                            </div>
+                            <div uk-form-custom="target: true">
+                                <input type="file" name="imgFile">
+                                <input class="uk-input uk-form-small" type="text" placeholder="이미지 파일 2">
+                            </div>
+                            <div uk-form-custom="target: true">
+                                <input type="file" name="imgFile">
+                                <input class="uk-input uk-form-small" type="text" placeholder="이미지 파일 2">
+                            </div>
+                            <div uk-form-custom="target: true">
+                                <input type="file" name="imgFile">
+                                <input class="uk-input uk-form-small" type="text" placeholder="이미지 파일 2">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="uk-card-body">
+                <p>
+                    <textarea name="contents" class="uk-textarea uk-width-1-1" rows="10" placeholder="text"></textarea>
+                </p>
+            </div>
+            <div class="uk-card-footer">
+                <ul class="uk-breadcrumb">
+                    <li><button type="reset" class="uk-button uk-button-text uk-text-warning">Reset</button></li>
+                    <li><button type="submit" class="uk-button uk-button-text uk-text-primary">Submit</button></li>
+                </ul>
+            </div>
+        </form>
+    </div>
+</div>
+</html>
