@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mybatis.myboard.mapper.ReplyPreferMapper">
+    <resultMap id="ReplyPreferMap" type="ReplyPreferDto">
+        <id column="reply_prefer_id" property="replyPreferId"/>
+        <result column="reply_id" property="replyId"/>
+        <result column="user_id" property="userId"/>
+        <result column="prefer" property="prefer"/>
+    </resultMap>
+
+    <insert id="insertOne">
+        INSERT INTO reply_prefer (reply_id, user_id, prefer)
+        VALUES (#{replyId}, #{userId}, #{prefer})
+    </insert>
+
+    <update id="updateOne">
+        UPDATE reply_prefer SET prefer=#{prefer}
+                            WHERE reply_prefer_id=#{replyPreferId}
+    </update>
+
+    <delete id="deleteById">
+        DELETE FROM reply_prefer WHERE reply_prefer_id=#{replyPreferId}
+    </delete>
+
+    <select id="countByReplyIdAndPreferIsTrue" resultType="java.lang.Integer">
+        SELECT count(*) FROM reply_prefer WHERE reply_id=#{replyId} AND prefer=true
+    </select>
+
+    <select id="countByReplyIdAndPreferIsFalse" resultType="java.lang.Integer">
+        SELECT count(*) FROM reply_prefer WHERE reply_id=#{replyId} AND prefer=false
+        </select>
+
+    <select id="selectByReplyIdAndUserId" resultMap="ReplyPreferMap">
+        SELECT * FROM reply_prefer WHERE reply_id=#{replyId} AND user_id=#{userId}
+    </select>
+</mapper>

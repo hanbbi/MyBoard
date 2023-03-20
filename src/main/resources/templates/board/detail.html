@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{/layout}">
+<head>
+    <meta charset="UTF-8">
+    <title>Board Detail Form</title>
+</head>
+<div layout:fragment="contents">
+    <h1>No.<span th:text="${boardId}"></span> Board Detail Page</h1>
+    <p class="uk-text-right">
+        VIEWS : <span class="uk-badge" th:text="${board.views}"></span>
+    </p>
+    <p class="uk-text-right">
+        <a class="uk-button uk-button-small uk-button-primary"
+           th:href="@{'/board/{boardId}/modify.do'(boardId=${board.boardId})}">Modify</a>
+    </p>
+
+    <div class="uk-margin">
+        <label class="uk-form-label" for="boardId">NO : </label>
+        <div class="uk-inline uk-form-width-large">
+            <input class="uk-input uk-form-blank" type="text" readonly th:value="${board.boardId}" id="boardId"
+                   name="board_id">
+        </div>
+    </div>
+    <div class="uk-margin">
+        <label class="uk-form-label" for="userId">USER ID : </label>
+        <div class="uk-inline uk-form-width-large">
+            <input class="uk-input uk-form-blank" type="text" readonly th:value="${board.userId}" id="userId"
+                   name="user_id">
+        </div>
+    </div>
+    <div class="uk-margin">
+        <label class="uk-form-label" for="userId">NAME / EMAIL : </label>
+        <div class="uk-inline uk-form-width-large">
+            <span th:text="${board.user.userName}"/> / <span th:text="${board.user.userEmail}"/>
+        </div>
+    </div>
+    <div class="uk-margin">
+        <label class="uk-form-label" for="regDate">POST TIME : </label>
+        <div class="uk-inline uk-form-width-large">
+            <input class="uk-input uk-form-blank" type="text" readonly
+                   th:value="${#calendars.format(board.regDate, 'yyyy년 MM월 dd일 HH:mm:ss')}" id="regDate"
+                   name="reg_date">
+        </div>
+    </div>
+    <div class="uk-margin">
+        <label class="uk-form-label" for="boardTitle">LIKE : </label>
+        <span id="boardPreferContainer"
+              th:include="/board/boardPrefer" th:with="prefer=${board.boardPreferView}"></span>
+    </div>
+    <div class="uk-margin">
+        <label class="uk-form-label" for="title">TITLE : </label>
+        <div class="uk-inline uk-form-width-large">
+            <input class="uk-input uk-form-blank" type="text" readonly th:value="${board.title}" id="title"
+                   name="title">
+        </div>
+    </div>
+    <div class="uk-position-relative"
+         uk-slideshow="animation: slide; autoplay: true;autoplay-interval: 3000;">
+        <ul class="uk-slideshow-items">
+            <li th:each="boardImg:${board.boardImgList}">
+                <img th:src="@{'/img/{file}'(file=${boardImg.imgPath})}"
+                     alt="" uk-cover>
+            </li>
+        </ul>
+        <div class="uk-position-bottom-center uk-position-small">
+            <ul class="uk-thumbnav">
+                <li th:each="boardImg,i:${board.boardImgList}"
+                    th:attr="uk-slideshow-item=${(i.count)-1}">
+                    <a href="#">
+                        <img th:src="@{'/img/{file}'(file=${boardImg.imgPath})}" width="100" height="67" alt="">
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="uk-margin">
+        <label class="uk-form-label" for="contents">CONTENTS : </label>
+        <div class="uk-inline uk-form-width-large">
+            <textarea class="uk-textarea uk-form-blank" rows="5" readonly th:text="${board.contents}"
+                      id="contents" name="contents"/>
+        </div>
+    </div>
+    <h2>Reply List</h2>
+    <div id="replyRegisterContainer" th:if="${session.loginUser!=null}">
+        <th:block th:include="/reply/register"></th:block>
+    </div>
+    <div id="replyListContainer">
+        <th:block th:include="/reply/list"></th:block>
+    </div>
+
+    <script th:inline="javascript">
+        const replyListContainer = document.getElementById("replyListContainer");
+
+        function loadRegisterForm(replyId) {
+            const replyRegisterForm = document.forms["replyRegisterForm"];
+            const cloneForm = replyRegisterForm.cloneNode(true); //등록폼 가져와서 복사
+            cloneForm.onsubmit = function (e) { //복사된 폼의 등록 이벤트 재정의
+                registerReply(e, cloneForm);
+            }
+            cloneForm.fkReplyId.value = replyId; //복사된 폼의 참조하는 부모 번호 정의
+            let selector = "reReplyRegisterContainer" + replyId;
+            const reReplyRegisterContainer = document.getElementById(selector); //복사한 폼의 옮길 위치
+            reReplyRegisterContainer.append(cloneForm);
+        }
+
+        async function removeReply(replyId) {
+            let url = "/reply/remove.do?replyId=" + replyId;
+            const resp = await fetch(url, {method: "DELETE"});
+            if (resp.status === 200) {
+                const json = await resp.json();
+                if (json.state == 1) {
+                    await loadReplyList();
+                    alert("삭제 성공!");
+                } else {
+                    alert("삭제할 레코드가 없습니다.");
+                }
+            } else {
+                alert(`삭제 실패! ${resp.status}`);
+            }
+        }
+
+        function init() {
+            const pageBtns = replyListContainer.querySelectorAll(".uk-pagination a");
+            const replyRegisterForm = document.forms["replyRegisterForm"];
+            pageBtns.forEach((btn) => {
+                btn.onclick = async (e) => {
+                    e.preventDefault();
+                    let btnUrl = e.target.href;
+                    let queryString = btnUrl.split("?")[1];
+                    let url = "/reply/[[${boardId}]]/list.do?" + queryString;
+                    const resp = await fetch(url);
+                    const html = await resp.text();
+                    replyListContainer.innerHTML = html;
+                    init();
+                }
+            });
+            replyRegisterForm.onsubmit = function (e) {
+                registerReply(e, replyRegisterForm);
+            };
+        }
+
+        init();
+
+        async function registerReply(e, replyRegisterForm) {
+            e.preventDefault();
+            let url = "/reply/register.do";
+            const formData = new FormData(replyRegisterForm);
+            const resp = await fetch(url, {method: "POST", body: formData});
+            const json = await resp.json();
+            console.log(json);
+            if (json.state == 1) {
+                await loadReplyList();
+            }
+        }
+
+        async function loadReplyList() {
+            const resp = await fetch("/reply/[[${boardId}]]/list.do");
+            const html = await resp.text();
+            replyListContainer.innerHTML = html;
+            init();
+        }
+
+        async function loadReplyModifyForm(replyId) {
+            let url = "/reply/modify.do?replyId=" + replyId;
+            let seletor = "replyContainer" + replyId;
+            const replyContainer = document.getElementById(seletor);
+            const resp = await fetch(url);
+            if (resp.status == 200) {
+                let html = await resp.text();
+                replyContainer.innerHTML = html;
+            }
+        }
+
+        async function modifyReply(formNode) {
+            const formData = new FormData(formNode);
+            let url = "/reply/modify.do"
+            const resp = await fetch(url, {method: "PUT", body: formData});
+            if (resp.status == 200) {
+                const json = await resp.json();
+                if (json.state == 1) {
+                    await loadReplyList();
+                    alert("수정 성공");
+                } else {
+                    alert("이미 삭제된 레코드 입니다.");
+                }
+            } else {
+                alert("서버 오류 (" + resp.status + ")");
+            }
+        }
+
+        async function boardPreferHandler(boardId, preferBtn) {
+            let url = `/board/prefer/handler.do?boardId=${boardId}&preferBtn=${preferBtn}`;
+            let viewUrl = "/board/prefer/view.do?boardId=" + boardId;
+            const boardPreferContainer = document.getElementById("boardPreferContainer");
+            const resp = await fetch(url, {method: "PUT"});
+            if (resp.status == 200) {
+                const json = await resp.json();
+                if (json.state == 1) {
+                    const resp = await fetch(viewUrl);
+                    if (resp.status == 200) {
+                        let html = await resp.text();
+                        boardPreferContainer.innerHTML = html;
+                    } else {
+                        alert("좋아요 싫어요 불러오기 실패(새로고침하세요)");
+                    }
+                } else {
+                    alert("좋아요 싫어요 실패");
+                }
+            } else if (resp.status == 400) {
+                alert("로그인 하셔야 이용할 수 있습니다.");
+            } else if (resp.status == 405) {
+                alert("잘못된 경로로 이용하시고 계십니다.");
+            } else if (resp.status == 500) {
+                alert("db 서버 오류");
+            }
+        }
+    </script>
+</div>
+</html>

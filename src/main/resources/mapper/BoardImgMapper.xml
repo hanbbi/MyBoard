@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mybatis.myboard.mapper.BoardImgMapper">
+    <resultMap id="BoardImgMap" type="BoardImgDto">
+        <id column="board_img_id" property="boardImgId"/>
+        <result column="board_id" property="boardId"/>
+        <result column="img_path" property="imgPath"/>
+    </resultMap>
+
+    <insert id="insertOne">
+        INSERT INTO board_img (board_id, img_path)
+        VALUES (#{boardId}, #{imgPath})
+    </insert>
+
+    <delete id="deleteById">
+        DELETE FROM board_img WHERE board_img_id=#{boardImgId}
+    </delete>
+
+    <select id="selectById" resultMap="BoardImgMap">
+        SELECT * FROM board_img WHERE board_img_id=#{boardImgId}
+    </select>
+
+    <select id="listByBoardId" resultMap="BoardImgMap">
+        SELECT * FROM board_img WHERE board_id=#{boardId}
+    </select>
+</mapper>

@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{/layout}">
+<head>
+    <meta charset="UTF-8">
+    <title>Find PW Page</title>
+</head>
+<body>
+<div layout:fragment="contents">
+    <h1>Find Your PW</h1>
+    <div class="uk-margin">
+        <div class="uk-inline uk-width-1-3">
+            <span class="uk-form-icon" uk-icon="icon: user"></span>
+            <input class="uk-input" type="text" name="user_id" readonly th:value="${user.userId}">
+        </div>
+    </div>
+    <div class="uk-margin">
+        <div class="uk-inline uk-width-1-3">
+            <span class="uk-form-icon" uk-icon="icon: lock"></span>
+            <input class="uk-input" type="text" name="user_pw" readonly th:value="${user.userPw}">
+        </div>
+    </div>
+</div>
+</body>
+</html>
